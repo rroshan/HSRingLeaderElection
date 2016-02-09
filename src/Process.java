@@ -87,17 +87,13 @@ public class Process implements Runnable
 		Message tokenl, tokenr = null; 
 		while(true)
 		{
-			
-//			Scanner scanner = new Scanner(System.in);
-//			scanner.nextLine();
-//			
 			//waiting new round start message
 			Message msg = null;
 			try {
 				msg = qRound.take();
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
-				System.out.println("Thread completed");
+				System.out.println(processId+" completed");
 				break;
 			}
 			if(msg.getType() == 'N')
@@ -116,12 +112,6 @@ public class Process implements Runnable
 					{
 						try {
 							rightNeighbor.getQIn().put(sendMsg);
-							if(sendMsg.getType() == 'L')
-							{
-								System.out.println("Leader annoucement sending: "+sendMsg);
-								System.out.println("Leader annoucement written to right neighbor size: "+rightNeighbor.getQIn().size());
-							}
-							
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -165,16 +155,12 @@ public class Process implements Runnable
 				Message m1 = null;
 				int sameInCount = 0;
 
-				System.out.println(processId+" Ready for reading");
 				if(!qIn.isEmpty())
 				{
 					while(qIn.size() > 0)
 					{
-//						System.out.println(+processId+" "+"In size:"+qIn.size());
 						try {
 							m1 = qIn.take();
-							System.out.println(processId+" got message :"+m1);
-//							System.out.println(processId+" "+m1.getProcessId());
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -190,13 +176,11 @@ public class Process implements Runnable
 									if(m1.getFromDir() == 'R')
 									{
 										tokenr = new Message(m1.getProcessId(), 'O', m1.getHops() - 1, 'R');
-										System.out.println("Putting in outlist for forwarding by:"+processId+" and message:"+tokenr);
 										outList.add(tokenr);
 									}
 									else if(m1.getFromDir() == 'L')
 									{
 										tokenl = new Message(m1.getProcessId(), 'O', m1.getHops() - 1, 'L');
-										System.out.println("Putting in outlist for forwarding by:"+processId+" and message:"+tokenl);
 										outList.add(tokenl);
 									}
 								}
@@ -207,14 +191,12 @@ public class Process implements Runnable
 										tokenr = new Message(m1.getProcessId(), 'I', Integer.MIN_VALUE, 'L');
 										//TODO
 										//put to queue
-										System.out.println("Sending In message back by:"+processId+" message:"+tokenr);
 										outList.add(tokenr);
 									}
 									else if(m1.getFromDir() == 'L')
 									{
 										tokenl = new Message(m1.getProcessId(), 'I', Integer.MIN_VALUE, 'R');
 										//put to queue
-										System.out.println("Sending In message back by:"+processId+" message:"+tokenl);
 										outList.add(tokenl);
 									}
 								}
@@ -237,8 +219,6 @@ public class Process implements Runnable
 
 								//sending token to neighbors
 								outList.add(leaderTokenr);
-								
-								System.out.println("Leader Found printinh:"+outList.size());
 
 							}
 						}
@@ -259,11 +239,8 @@ public class Process implements Runnable
 									phase++;
 									Message msg1 = new Message(processId, 'O', Math.pow(2, phase), 'L');
 									Message msg2 = new Message(processId, 'O', Math.pow(2, phase), 'R');
-									System.out.println("ProcessId:"+processId+" got both the messages back");
 									outList.add(msg1);
-									System.out.println("Got both messages back for:"+processId+" and putting in outlist:"+msg1);
 									outList.add(msg2);
-									System.out.println("Got both messages back for: "+processId+" and putting in outlist:"+msg1);
 								}
 							}
 						}
@@ -277,10 +254,6 @@ public class Process implements Runnable
 					}
 				}
 			}
-			
-			System.out.println("Printing the outlist:");
-			for(Message m: outList)
-				System.out.println("Outlist message for Process:"+processId+" and message:"+m);
 			
 			Message ready = null;
 			if(leaderFound)

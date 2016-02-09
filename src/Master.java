@@ -106,8 +106,6 @@ public class Master
 			}
 		}
 
-		//if all processes were ready then method return true
-		System.out.println("**********************************************New Round Starting**********************************************");
 		return true;
 	}
 
@@ -164,7 +162,7 @@ public class Master
 			String processIds = inputReader.readLine();
 			String processes[] = processIds.split(" ");
 			if(processes.length!=n) {
-				System.out.println("Number of process ids not equal to n. Please check input and try again.");
+				System.err.println("Number of process ids not equal to n. Please check input and try again.");
 				System.exit(-1);
 			}
 			for (int i = 0; i < processes.length; i++) {
@@ -172,13 +170,13 @@ public class Master
 			}
 			
 		} catch (FileNotFoundException e) {
-			System.out.println("Input file not found. Please check if the input file is in the same folder.");
+			System.err.println("Input file not found. Please check if the input file is in the same folder.");
 			System.exit(-1);
 		} catch (IOException e) {
-			System.out.println("Input file incorrect. Please check the input file format and try again.");
+			System.err.println("Input file incorrect. Please check the input file format and try again.");
 			System.exit(-1);
 		} catch(NumberFormatException e) {
-			System.out.println("Input file contains some non-integer data. Please check the input file and try again.");
+			System.err.println("Input file contains some non-integer data. Please check the input file and try again.");
 			System.exit(-1);
 		}
 		
