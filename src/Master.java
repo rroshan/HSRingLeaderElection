@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 
 public class Master 
 {
@@ -184,11 +181,6 @@ public class Master
 			System.out.println("Input file contains some non-integer data. Please check the input file and try again.");
 			System.exit(-1);
 		}
-		
-		//dummy initialization
-//		int masterProcessId = 0;
-//		int[] id = {3, 1, 4, 2, 55, 97, 1005, 5, 11};
-//		int n = id.length;
 		
 		//creating the master process. Master thread is the main thread
 		Master masterProcess = new Master(masterProcessId, id);
