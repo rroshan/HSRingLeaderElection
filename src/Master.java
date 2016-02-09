@@ -1,8 +1,15 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import jdk.management.resource.internal.inst.SocketOutputStreamRMHooks;
 
 public class Master 
 {
@@ -147,10 +154,41 @@ public class Master
 	public static void main(String[] args)
 	{
 		//accept input from input.dat
-		//dummy initialization
 		int masterProcessId = 0;
-		int[] id = {3, 1, 4, 2, 55, 97, 1005, 5, 11};
-		int n = id.length;
+		String currentDirectory = System.getProperty("user.dir");
+		BufferedReader inputReader = null;
+		int n = 0;
+		int[] id = null;
+		try {
+			inputReader = new BufferedReader(new FileReader(new File(currentDirectory + "/input.dat")));
+			String noOfProcesses = inputReader.readLine();
+			n = Integer.parseInt(noOfProcesses);
+			id = new int[n];
+			String processIds = inputReader.readLine();
+			String processes[] = processIds.split(" ");
+			if(processes.length!=n) {
+				System.out.println("Number of process ids not equal to n. Please check input and try again.");
+				System.exit(-1);
+			}
+			for (int i = 0; i < processes.length; i++) {
+				id[i] = Integer.parseInt(processes[i]);
+			}
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("Input file not found. Please check if the input file is in the same folder.");
+			System.exit(-1);
+		} catch (IOException e) {
+			System.out.println("Input file incorrect. Please check the input file format and try again.");
+			System.exit(-1);
+		} catch(NumberFormatException e) {
+			System.out.println("Input file contains some non-integer data. Please check the input file and try again.");
+			System.exit(-1);
+		}
+		
+		//dummy initialization
+//		int masterProcessId = 0;
+//		int[] id = {3, 1, 4, 2, 55, 97, 1005, 5, 11};
+//		int n = id.length;
 		
 		//creating the master process. Master thread is the main thread
 		Master masterProcess = new Master(masterProcessId, id);
