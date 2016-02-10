@@ -225,6 +225,7 @@ public class Master
 			//reference for the queue to which processes will write ready for next round
 			processes[i].setQMaster(masterProcess.getMasterQueue());
 			t[i] = new Thread(processes[i]);
+			
 			t[i].start();
 		}
 		
