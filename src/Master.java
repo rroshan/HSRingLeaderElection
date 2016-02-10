@@ -8,6 +8,14 @@ import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+
+/*
+ * Team Memebers: Hardik Trivedi (hpt150030)
+ * 				  Roshan Ravikumar (rxr151330)
+ * 				  Sapan Gandhi (sdg150130) 
+ */
+
+
 public class Master 
 {
 	//Master process ID
