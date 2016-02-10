@@ -80,7 +80,7 @@ public class Process implements Runnable
 				msg = qRound.take();
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
-				System.out.println(processId+" completed");
+				System.out.println("Process "+processId+" terminated!");
 				break;
 			}
 			if(msg.getType() == 'N')
@@ -209,7 +209,7 @@ public class Process implements Runnable
 								leaderFound = true;
 								leaderId = processId;
 
-								System.out.println(processId+" I'm leader");
+								System.out.println("Process "+ processId+" says \'I'm leader\'");
 
 								//announce..code change is required
 								//assembling a token containing id, phase, and direction=out and fromDir
@@ -247,7 +247,7 @@ public class Process implements Runnable
 							leaderFound = true;
 							leaderId = m1.getProcessId();
 							outList.add(m1);
-							System.out.println(processId+" He is leader:"+leaderId);
+							System.out.println("Process "+  processId+" knows "+leaderId+" is the leader");
 						}
 					}
 				}
