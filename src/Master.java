@@ -20,13 +20,13 @@ public class Master
 {
 	//Master process ID
 	private int masterProcessId;
-	
+
 	//processes write to this to indicate that they are ready for the next round.
 	private BlockingQueue<Message> masterQueue;
-	
+
 	//number of processes in the ring
 	private int numberOfProcesses;
-	
+
 	boolean completed = false; 
 
 	/*
@@ -39,13 +39,13 @@ public class Master
 	public Master(int masterProcessId, int[] id) //id array contains the unique id of the processes
 	{
 		this.masterProcessId = masterProcessId;
-		
+
 		//number of processes
 		numberOfProcesses = id.length;
 
 		//ready for next round queue
 		masterQueue = new ArrayBlockingQueue<>(numberOfProcesses);
-		
+
 		Message readyMsg;
 		BlockingQueue<Message> processQueue, roundQueue;
 
@@ -76,16 +76,16 @@ public class Master
 		/*
 		 * if number of message in the queue is less than nuumberOfProcesses then return false
 		 */
-		
+
 		int count = 0;
-		
+
 		if(masterQueue.size() < numberOfProcesses)
 		{
 			return false;
 		}
 
 		Message msg;
-		
+
 		for(int i = 0; i < numberOfProcesses; i++)
 		{
 			try 
@@ -96,11 +96,11 @@ public class Master
 				{
 					return false;
 				}
-				
+
 				if(msg.getType() == 'L')
 				{
 					count++;
-					
+
 					if(count == numberOfProcesses)
 					{
 						completed = true;
@@ -125,7 +125,7 @@ public class Master
 		Iterator<BlockingQueue<Message>> it = arrRoundQueue.iterator();
 		BlockingQueue<Message> blkq;
 		Message msg;
-		
+
 		while(it.hasNext())
 		{
 			blkq = it.next();
@@ -133,22 +133,22 @@ public class Master
 			blkq.add(msg);
 		}
 	}
-	
+
 	public BlockingQueue<Message> getMasterQueue()
 	{
 		return masterQueue;
 	}
-	
+
 	public ArrayList<BlockingQueue<Message>> getProcessMasterQueue()
 	{
 		return arrQueue;
 	}
-	
+
 	public ArrayList<BlockingQueue<Message>> getRoundQueue()
 	{
 		return arrRoundQueue;
 	}
-	
+
 	public boolean isCompleted()
 	{
 		return completed;
@@ -176,7 +176,7 @@ public class Master
 			for (int i = 0; i < processes.length; i++) {
 				id[i] = Integer.parseInt(processes[i]);
 			}
-			
+
 		} catch (FileNotFoundException e) {
 			System.err.println("Input file not found. Please check if the input file is in the same folder.");
 			System.exit(-1);
@@ -187,23 +187,23 @@ public class Master
 			System.err.println("Input file contains some non-integer data. Please check the input file and try again.");
 			System.exit(-1);
 		}
-		
+
 		//creating the master process. Master thread is the main thread
 		Master masterProcess = new Master(masterProcessId, id);
-		
+
 		//creating other threads for HS algorithm simulation
 		Process[] processes = new Process[n];
-		
+
 		for(int i = 0; i < n; i++)
 		{
 			processes[i] = new Process(id[i]);
 		}
-		
+
 		for(int i = 0; i < n; i++)
 		{
 			//setting the process's incoming queue where message from left and right processes will be written.
 			processes[i].setQIn(masterProcess.getProcessMasterQueue().get(i));
-			
+
 			//setting the process i's left and right neighboring processes
 			if(i == 0)
 			{
@@ -213,19 +213,19 @@ public class Master
 			{
 				processes[i].setLeftNeighbor(processes[(i - 1) % n]);
 			}
-			
+
 			processes[i].setRightNeighbor(processes[(i + 1) % n]);
 			processes[i].getOutList().clear();
-			
+
 			Message msg1 = new Message(id[i], 'O', 1, 'L');
 			Message msg2 = new Message(id[i], 'O', 1, 'R');
-			
+
 			processes[i].getOutList().add(msg1);
 			processes[i].getOutList().add(msg2);
-			
+
 			processes[i].setQRound(masterProcess.getRoundQueue().get(i));
 		}
-		
+
 		//starting all the threads
 		Thread[] t = new Thread[n];
 		for(int i = 0; i < n; i++)
@@ -233,10 +233,10 @@ public class Master
 			//reference for the queue to which processes will write ready for next round
 			processes[i].setQMaster(masterProcess.getMasterQueue());
 			t[i] = new Thread(processes[i]);
-			
+
 			t[i].start();
 		}
-		
+
 		/*
 		 * keep looping till HS algorithm is completed
 		 */
@@ -247,12 +247,12 @@ public class Master
 				masterProcess.startNextRound();
 			}
 		}
-		
+
 		for(int i = 0; i < n; i++)
 		{
 			t[i].interrupt();
 		}
-		
+
 		//waiting till all child thread complete
 		for(int i = 0; i < t.length; i++)
 		{
@@ -263,7 +263,7 @@ public class Master
 				e.printStackTrace();
 			}
 		}
-		
+
 		System.out.println("Completed!!");
 	}
 }

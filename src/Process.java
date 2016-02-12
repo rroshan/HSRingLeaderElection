@@ -128,7 +128,7 @@ public class Process implements Runnable
 					leftNeighbor.setRightWriteDone(true);
 					leftNeighbor.notify();
 				}
-				
+
 				synchronized (rightNeighbor) {
 					rightNeighbor.setLeftWriteDone(true);
 					rightNeighbor.notify();
@@ -212,17 +212,18 @@ public class Process implements Runnable
 							}
 							else
 							{
-								leaderFound = true;
-								leaderId = processId;
+								if(!leaderFound)
+								{
+									leaderFound = true;
+									leaderId = processId;
 
-								System.out.println("Process "+ processId+" says \'I'm leader\'");
+									System.out.println("Process "+ processId+" says \'I'm leader\'");
 
-								//announce..code change is required
-								//assembling a token containing id, phase, and direction=out and fromDir
-								Message leaderTokenr = new Message(processId, 'L', 1, 'L');
+									Message leaderTokenr = new Message(processId, 'L', 1, 'L');
 
-								//sending token to neighbors
-								outList.add(leaderTokenr);
+									//sending token to neighbors
+									outList.add(leaderTokenr);
+								}
 
 							}
 						}

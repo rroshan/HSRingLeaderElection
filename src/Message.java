@@ -7,7 +7,7 @@
 public class Message
 {
 	private int processId;
-	
+
 	/*
 	 * R - Ready for next round
 	 * N - Start of next round
@@ -16,14 +16,14 @@ public class Message
 	 * L - I'm leader Leader
 	 */
 	private char type;
-	
+
 	/*
 	 * Integer.MIN_VALUE denotes hops field is insignificant
 	 */
 	private double hops;
-	
+
 	private char fromDir;
-	
+
 	public Message(int processId, char type, double hops, char fromDir)
 	{
 		this.processId = processId;
@@ -67,10 +67,10 @@ public class Message
 	public void setHops(double hops) {
 		this.hops = hops;
 	}
-	
+
 	public String toString()
 	{
 		return "Process ID:"+processId+" Type:"+type+" Hops "+hops+" From Dir:"+fromDir;
-		
+
 	}
 }
